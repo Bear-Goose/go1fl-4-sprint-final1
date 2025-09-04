@@ -3,16 +3,18 @@ package daysteps
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
-
-	"spentcalories"
 )
 
 const (
-	stepLength = 0.65
-	mInKm      = 1000
+	stepLength                 = 0.65 // длина одного шага (м)
+	mInKm                      = 1000 // метров в километре
+	minInH                     = 60   // минут в часе
+	stepLengthCoefficient      = 0.45 // коэффициент длины шага от роста
+	walkingCaloriesCoefficient = 0.5  // поправочный коэффициент для ходьбы
 )
 
 func parsePackage(data string) (int, time.Duration, error) {
@@ -26,37 +28,52 @@ func parsePackage(data string) (int, time.Duration, error) {
 		return 0, 0, errors.New("не удалось преобразовать количество шагов")
 	}
 
-	duration, err := time.ParseDuration(parts[1])
-	if err != nil || duration <= 0 {
+	dur, err := time.ParseDuration(parts[1])
+	if err != nil || dur <= 0 {
 		return 0, 0, errors.New("не удалось разобрать длительность прогулки")
 	}
 
-	return steps, duration, nil
+	return steps, dur, nil
+}
+
+func distance(steps int, height float64) float64 {
+	stepLen := height * stepLengthCoefficient
+	return float64(steps) * stepLen / mInKm
+}
+
+func meanSpeed(steps int, height float64, dur time.Duration) float64 {
+	if dur <= 0 {
+		return 0
+	}
+	return distance(steps, height) / dur.Hours()
+}
+
+func walkingCalories(steps int, weight, height float64, dur time.Duration) (float64, error) {
+	if steps <= 0 || weight <= 0 || height <= 0 || dur <= 0 {
+		return 0, errors.New("некорректные параметры для расчёта калорий")
+	}
+	speed := meanSpeed(steps, height, dur)
+	cals := (weight * speed * dur.Minutes() / minInH) * walkingCaloriesCoefficient
+	return cals, nil
 }
 
 func DayActionInfo(data string, weight, height float64) string {
-	steps, duration, err := parsePackage(data)
+	steps, dur, err := parsePackage(data)
 	if err != nil {
-		fmt.Println("Ошибка:", err)
+		log.Println(err)
 		return ""
 	}
 
-	if steps <= 0 {
-		return ""
-	}
+	distanceKm := (float64(steps) * stepLength) / mInKm
 
-	distanceMeters := float64(steps) * stepLength
-	distanceKm := distanceMeters / mInKm
-
-	calories, err := spentcalories.WalkingSpentCalories(steps, weight, height, duration)
+	cals, err := walkingCalories(steps, weight, height, dur)
 	if err != nil {
-		fmt.Println("Ошибка расчета калорий:", err)
+		log.Println(err)
 		return ""
 	}
 
-	result := fmt.Sprintf(
+	return fmt.Sprintf(
 		"Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.\n",
-		steps, distanceKm, calories)
-
-	return result
+		steps, distanceKm, cals,
+	)
 }
