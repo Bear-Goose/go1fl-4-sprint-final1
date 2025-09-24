@@ -11,15 +11,16 @@ import (
 
 // Константы для расчетов
 const (
-	lenStep                    = 0.65
-	mInKm                      = 1000
-	minInH                     = 60
-	stepLengthCoefficient      = 0.45
-	walkingCaloriesCoefficient = 0.5
+	lenStep                    = 0.65 // средняя длина шага.
+	mInKm                      = 1000 // количество метров в километре.
+	minInH                     = 60   // количество минут в часе.
+	stepLengthCoefficient      = 0.45 // коэффициент для расчета длины шага на основе роста.
+	walkingCaloriesCoefficient = 0.5  // коэффициент для расчета калорий при ходьбе
 )
 
 // parseTraining разбирает входные данные формата "3456,Ходьба,3h00m"
 func parseTraining(data string) (int, string, time.Duration, error) {
+	// TODO: реализовать функцию
 	parts := strings.Split(data, ",")
 	if len(parts) != 3 {
 		return 0, "", 0, errors.New("invalid training data format")
@@ -52,6 +53,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 }
 
 // distance рассчитывает дистанцию в километрах
+// TODO: реализовать функцию
 func distance(steps int, height float64) float64 {
 	stepLength := height * stepLengthCoefficient
 	return float64(steps) * stepLength / mInKm
@@ -67,6 +69,7 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 
 // RunningSpentCalories вычисляет калории, потраченные на бег
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
+	// TODO: реализовать функцию
 	if steps <= 0 {
 		return 0, errors.New("steps must be > 0")
 	}
@@ -87,6 +90,7 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 
 // WalkingSpentCalories вычисляет калории, потраченные на ходьбу
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
+	// TODO: реализовать функцию
 	if steps <= 0 {
 		return 0, errors.New("steps must be > 0")
 	}
@@ -107,6 +111,7 @@ func WalkingSpentCalories(steps int, weight, height float64, duration time.Durat
 
 // TrainingInfo формирует отчет о тренировке
 func TrainingInfo(data string, weight, height float64) (string, error) {
+	// TODO: реализовать функцию
 	steps, activityType, duration, err := parseTraining(data)
 	if err != nil {
 		log.Println(err)

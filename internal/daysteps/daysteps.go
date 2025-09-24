@@ -10,14 +10,15 @@ import (
 )
 
 const (
-	stepLength                 = 0.65 // длина одного шага (м)
-	mInKm                      = 1000 // метров в километре
+	stepLength                 = 0.65 // Длина одного шага в метрах
+	mInKm                      = 1000 // Количество метров в одном километре
 	minInH                     = 60   // минут в часе
 	stepLengthCoefficient      = 0.45 // коэффициент длины шага от роста
 	walkingCaloriesCoefficient = 0.5  // поправочный коэффициент для ходьбы
 )
 
 func parsePackage(data string) (int, time.Duration, error) {
+	// TODO: реализовать функцию
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
 		return 0, 0, errors.New("invalid data format")
@@ -55,6 +56,7 @@ func meanSpeed(steps int, height float64, dur time.Duration) float64 {
 }
 
 func walkingCalories(steps int, weight, height float64, dur time.Duration) (float64, error) {
+	// TODO: реализовать функцию
 	if steps <= 0 || weight <= 0 || height <= 0 || dur <= 0 {
 		return 0, errors.New("invalid parameters for calories calculation")
 	}
