@@ -20,17 +20,23 @@ const (
 func parsePackage(data string) (int, time.Duration, error) {
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
-		return 0, 0, errors.New("некорректный формат строки данных")
+		return 0, 0, errors.New("invalid data format")
 	}
 
 	steps, err := strconv.Atoi(parts[0])
-	if err != nil || steps <= 0 {
-		return 0, 0, errors.New("не удалось преобразовать количество шагов")
+	if err != nil {
+		return 0, 0, fmt.Errorf("invalid steps: %w", err)
+	}
+	if steps <= 0 {
+		return 0, 0, errors.New("invalid steps: must be > 0")
 	}
 
 	dur, err := time.ParseDuration(parts[1])
-	if err != nil || dur <= 0 {
-		return 0, 0, errors.New("не удалось разобрать длительность прогулки")
+	if err != nil {
+		return 0, 0, fmt.Errorf("invalid duration: %w", err)
+	}
+	if dur <= 0 {
+		return 0, 0, errors.New("invalid duration: must be > 0")
 	}
 
 	return steps, dur, nil
@@ -50,7 +56,7 @@ func meanSpeed(steps int, height float64, dur time.Duration) float64 {
 
 func walkingCalories(steps int, weight, height float64, dur time.Duration) (float64, error) {
 	if steps <= 0 || weight <= 0 || height <= 0 || dur <= 0 {
-		return 0, errors.New("некорректные параметры для расчёта калорий")
+		return 0, errors.New("invalid parameters for calories calculation")
 	}
 	speed := meanSpeed(steps, height, dur)
 	cals := (weight * speed * dur.Minutes() / minInH) * walkingCaloriesCoefficient

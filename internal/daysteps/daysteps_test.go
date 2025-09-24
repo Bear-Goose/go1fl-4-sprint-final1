@@ -335,7 +335,7 @@ func (suite *DayStepsTestSuite) TestDayActionInfo() {
 
 			got := DayActionInfo(tt.input, tt.weight, tt.height)
 
-			assert.Equal(suite.T(), tt.want, got, "\nDayActionInfo() получено:\n%v\nожидается:\n%v\n(ввод: %q, вес: %.1f, рост: %.2f\n)",
+			assert.Equal(suite.T(), tt.want, got, "\nDayActionInfo() получено:\n%v\nожидается:\n%v\n(ввод: %q, вес: %.1f, рост: %.2f)",
 				got, tt.want, tt.input, tt.weight, tt.height)
 
 			if tt.wantLogOutput {
