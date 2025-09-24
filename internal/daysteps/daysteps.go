@@ -23,7 +23,6 @@ func parsePackage(data string) (int, time.Duration, error) {
 		return 0, 0, errors.New("invalid data format")
 	}
 
-	// НЕ обрезаем пробелы — тесты ожидают ошибку для случаев с пробелами
 	stepsStr := parts[0]
 	durStr := parts[1]
 
