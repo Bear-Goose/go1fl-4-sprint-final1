@@ -18,13 +18,16 @@ const (
 )
 
 func parsePackage(data string) (int, time.Duration, error) {
-	// TODO: реализовать функцию
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
 		return 0, 0, errors.New("invalid data format")
 	}
 
-	steps, err := strconv.Atoi(parts[0])
+	// НЕ обрезаем пробелы — тесты ожидают ошибку для случаев с пробелами
+	stepsStr := parts[0]
+	durStr := parts[1]
+
+	steps, err := strconv.Atoi(stepsStr)
 	if err != nil {
 		return 0, 0, fmt.Errorf("invalid steps: %w", err)
 	}
@@ -32,7 +35,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 		return 0, 0, errors.New("invalid steps: must be > 0")
 	}
 
-	dur, err := time.ParseDuration(parts[1])
+	dur, err := time.ParseDuration(durStr)
 	if err != nil {
 		return 0, 0, fmt.Errorf("invalid duration: %w", err)
 	}
