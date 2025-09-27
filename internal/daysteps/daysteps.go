@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"spentcalories"
 	"strconv"
 	"strings"
 	"time"
@@ -57,12 +58,10 @@ func meanSpeed(steps int, height float64, dur time.Duration) float64 {
 }
 
 func walkingCalories(steps int, weight, height float64, dur time.Duration) (float64, error) {
-	// TODO: реализовать функцию
-	if steps <= 0 || weight <= 0 || height <= 0 || dur <= 0 {
-		return 0, errors.New("invalid parameters for calories calculation")
+	cals, err := spentcalories.WalkingSpentCalories(steps, weight, height, dur)
+	if err != nil {
+		return 0, fmt.Errorf("walkingCalories error: %w", err)
 	}
-	speed := meanSpeed(steps, height, dur)
-	cals := (weight * speed * dur.Minutes() / minInH) * walkingCaloriesCoefficient
 	return cals, nil
 }
 
