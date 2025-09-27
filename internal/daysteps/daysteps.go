@@ -50,11 +50,13 @@ func distance(steps int, height float64) float64 {
 	stepLen := height * stepLengthCoefficient
 	return float64(steps) * stepLen / mInKm
 }
-func meanSpeed(steps int, height float64, dur time.Duration) float64 {
-	if dur <= 0 {
+
+func meanSpeed(steps int, height float64, duration time.Duration) float64 {
+	if duration <= 0 {
 		return 0
 	}
-	return distance(steps, height) / dur.Hours()
+	dist := distance(steps, height) // км
+	return dist / duration.Hours()  // км/ч
 }
 
 func walkingCalories(steps int, weight, height float64, dur time.Duration) (float64, error) {
