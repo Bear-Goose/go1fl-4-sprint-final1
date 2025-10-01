@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"spentcalories"
 	"strconv"
 	"strings"
 	"time"
+
+	spentcalories "github.com/Yandex-Practicum/tracker/internal/spentcalories"
 )
 
 const (
