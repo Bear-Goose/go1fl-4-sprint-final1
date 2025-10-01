@@ -46,19 +46,6 @@ func parsePackage(data string) (int, time.Duration, error) {
 	return steps, dur, nil
 }
 
-func distance(steps int, height float64) float64 {
-	stepLen := height * stepLengthCoefficient
-	return float64(steps) * stepLen / mInKm
-}
-
-func meanSpeed(steps int, height float64, duration time.Duration) float64 {
-	if duration <= 0 {
-		return 0
-	}
-	dist := distance(steps, height) // км
-	return dist / duration.Hours()  // км/ч
-}
-
 func walkingCalories(steps int, weight, height float64, dur time.Duration) (float64, error) {
 	cals, err := spentcalories.WalkingSpentCalories(steps, weight, height, dur)
 	if err != nil {
